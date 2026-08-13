@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PACKAGES, getPackageWhatsAppLink, WHATSAPP_NUMBER } from '../data/kashmirData';
 import { Package, PackageCategory } from '../types';
+import { getActivePackages } from '../lib/packageService';
 import { PackageDetailModal } from './PackageDetailModal';
 import {
   MessageCircle,
@@ -23,10 +24,29 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({
   initialCategory,
   initialSearch = ''
 }) => {
+  const [packagesList, setPackagesList] = useState<Package[]>(PACKAGES);
   const [selectedCategory, setSelectedCategory] = useState<string>(initialCategory || 'all');
   const [selectedDuration, setSelectedDuration] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>(initialSearch);
   const [activePackage, setActivePackage] = useState<Package | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchActive = async () => {
+      try {
+        const loaded = await getActivePackages();
+        if (isMounted && loaded && loaded.length > 0) {
+          setPackagesList(loaded);
+        }
+      } catch (err) {
+        console.warn('Could not fetch active packages from Firestore, using static data', err);
+      }
+    };
+    fetchActive();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const categories = [
     { id: 'all', label: 'All Packages' },
@@ -35,7 +55,7 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({
     { id: 'adventure', label: '3. Adventure Tours' }
   ];
 
-  const filteredPackages = PACKAGES.filter((pkg) => {
+  const filteredPackages = packagesList.filter((pkg) => {
     const matchesCategory = selectedCategory === 'all' || pkg.category === selectedCategory;
     const matchesDuration =
       selectedDuration === 'all' ||
@@ -49,7 +69,7 @@ export const PackagesSection: React.FC<PackagesSectionProps> = ({
       pkg.destinationsCovered.some((d) => d.toLowerCase().includes(searchQuery.toLowerCase())) ||
       pkg.overview.toLowerCase().includes(searchQuery.toLowerCase());
 
-    return matchesCategory && matchesDuration && matchesSearch;
+    return matchesCategory && matchesDuration && matchesSearch && (pkg.active !== false);
   });
 
   return (

@@ -14,19 +14,61 @@ import { AiAssistantModal } from './components/AiAssistantModal';
 import { FloatingAiButton } from './components/FloatingAiButton';
 import { Footer } from './components/Footer';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
+import { AdminRoute } from './components/admin/AdminRoute';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<string>('home');
+  const getInitialTab = () => {
+    if (typeof window !== 'undefined') {
+      const path = window.location.pathname.toLowerCase();
+      if (path === '/admin' || path.startsWith('/admin/')) {
+        return 'admin';
+      }
+      if (window.location.hash === '#admin') {
+        return 'admin';
+      }
+    }
+    return 'home';
+  };
+
+  const [activeTab, setActiveTab] = useState<string>(getInitialTab);
   const [policySubTab, setPolicySubTab] = useState<string>('faqs');
   const [packageCategoryFilter, setPackageCategoryFilter] = useState<string | undefined>(undefined);
   const [searchFilter, setSearchFilter] = useState<string>('');
   const [isAiOpen, setIsAiOpen] = useState<boolean>(false);
   const [aiInitialQuery, setAiInitialQuery] = useState<string>('');
 
+  // Handle browser popstate navigation (Back / Forward)
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      if (path === '/admin' || path.startsWith('/admin/')) {
+        setActiveTab('admin');
+      } else {
+        setActiveTab('home');
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
   // Scroll to top on tab change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [activeTab]);
+
+  const handleTabChange = (tab: string) => {
+    if (tab === 'admin') {
+      if (window.location.pathname !== '/admin') {
+        window.history.pushState({}, '', '/admin');
+      }
+    } else {
+      if (window.location.pathname === '/admin' || window.location.pathname.startsWith('/admin/')) {
+        window.history.pushState({}, '', '/');
+      }
+    }
+    setActiveTab(tab);
+  };
 
   const handleOpenAiAssistant = (query?: string) => {
     if (query) {
@@ -40,11 +82,11 @@ export default function App() {
   const handleExplorePackages = (category?: string, destination?: string) => {
     setPackageCategoryFilter(category);
     setSearchFilter(destination || '');
-    setActiveTab('packages');
+    handleTabChange('packages');
   };
 
   const handleOpenCustomBuilder = () => {
-    setActiveTab('home');
+    handleTabChange('home');
     setTimeout(() => {
       const builderElem = document.getElementById('custom-builder');
       if (builderElem) {
@@ -56,13 +98,18 @@ export default function App() {
   const handleDestinationPackageFilter = (destinationName: string) => {
     setSearchFilter(destinationName);
     setPackageCategoryFilter(undefined);
-    setActiveTab('packages');
+    handleTabChange('packages');
   };
 
   const handleFooterPolicyClick = (subTab: string) => {
     setPolicySubTab(subTab);
-    setActiveTab('policies');
+    handleTabChange('policies');
   };
+
+  // If in admin view, render protected admin portal directly
+  if (activeTab === 'admin') {
+    return <AdminRoute onNavigateHome={() => handleTabChange('home')} />;
+  }
 
   return (
     <div className="min-h-screen bg-stone-100 text-stone-900 font-sans selection:bg-emerald-800 selection:text-amber-200 flex flex-col justify-between">
@@ -70,7 +117,7 @@ export default function App() {
       {/* Sticky Header */}
       <Header
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
         onOpenAiAssistant={() => handleOpenAiAssistant()}
       />
 
@@ -171,7 +218,7 @@ export default function App() {
 
       {/* Footer */}
       <Footer
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
         setPolicyTab={handleFooterPolicyClick}
       />
 
@@ -188,9 +235,10 @@ export default function App() {
       {/* Floating & Mobile WhatsApp CTA */}
       <FloatingWhatsApp
         activeTab={activeTab}
-        setActiveTab={setActiveTab}
+        setActiveTab={handleTabChange}
       />
 
     </div>
   );
 }
+

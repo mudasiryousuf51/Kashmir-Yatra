@@ -151,16 +151,27 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, setPolicyTab }) =>
           </p>
         </div>
 
-        {/* Bottom Rights */}
+        {/* Bottom Rights & Admin Access */}
         <div className="pt-6 border-t border-stone-900 flex flex-col sm:flex-row items-center justify-between text-xs text-stone-500 gap-3">
           <p>
             © {new Date().getFullYear()} KashmirYatra — “Discover Kashmir, Your Way.” All Rights Reserved.
           </p>
-          <p className="flex items-center gap-1">
-            <span>Crafted with</span>
-            <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" />
-            <span>for Kashmir Tourism</span>
-          </p>
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => handleNav('admin')}
+              className="text-[11px] text-stone-500 hover:text-stone-300 transition-colors flex items-center gap-1 cursor-pointer"
+              title="Administrator Login"
+            >
+              <ShieldCheck className="w-3 h-3 text-stone-500" />
+              <span>Admin Portal</span>
+            </button>
+            <span className="text-stone-700 hidden sm:inline">•</span>
+            <p className="flex items-center gap-1">
+              <span>Crafted with</span>
+              <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" />
+              <span>for Kashmir Tourism</span>
+            </p>
+          </div>
         </div>
 
       </div>

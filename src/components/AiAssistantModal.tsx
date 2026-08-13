@@ -13,9 +13,15 @@ import {
   HelpCircle,
   Sun,
   Utensils,
-  Car
+  Car,
+  ShieldCheck
 } from 'lucide-react';
 import { getWhatsAppLink } from '../data/kashmirData';
+import {
+  getOrCreateAnonymousSessionId,
+  getOrCreateConversationId,
+  trackAndSaveConversation,
+} from '../lib/conversationService';
 
 interface Message {
   id: string;
@@ -55,6 +61,10 @@ You can ask me about:
   const [inputMessage, setInputMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
+
+  // Initialize session & conversation IDs
+  const anonymousSessionId = useRef<string>(getOrCreateAnonymousSessionId());
+  const conversationId = useRef<string>(getOrCreateConversationId());
 
   const quickPrompts = [
     {
@@ -139,7 +149,23 @@ You can ask me about:
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
 
-      setMessages((prev) => [...prev, assistantMsg]);
+      const updated = [...messages, userMsg, assistantMsg];
+      setMessages(updated);
+
+      // Log conversation in Firestore
+      trackAndSaveConversation({
+        conversationId: conversationId.current,
+        anonymousSessionId: anonymousSessionId.current,
+        allMessages: updated.map((m) => ({
+          id: m.id,
+          role: m.role,
+          text: m.text,
+          timestamp: m.timestamp,
+        })),
+        latestUserMessage: query.trim(),
+      }).catch((err) => {
+        console.warn('Track conversation background err:', err);
+      });
     } catch (err) {
       console.error(err);
       const fallbackMsg: Message = {
@@ -155,7 +181,23 @@ You can ask me about:
 *To get an exact quote or book your customized tour, click "BOOK NOW" below to connect with our Srinagar local team on WhatsApp!*`,
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
-      setMessages((prev) => [...prev, fallbackMsg]);
+      const updated = [...messages, userMsg, fallbackMsg];
+      setMessages(updated);
+
+      // Log conversation in Firestore
+      trackAndSaveConversation({
+        conversationId: conversationId.current,
+        anonymousSessionId: anonymousSessionId.current,
+        allMessages: updated.map((m) => ({
+          id: m.id,
+          role: m.role,
+          text: m.text,
+          timestamp: m.timestamp,
+        })),
+        latestUserMessage: query.trim(),
+      }).catch((logErr) => {
+        console.warn('Track conversation fallback log error:', logErr);
+      });
     } finally {
       setLoading(false);
     }
@@ -385,6 +427,12 @@ You can ask me about:
               <MessageCircle className="w-3.5 h-3.5 fill-emerald-400 text-stone-950" />
               <span>BOOK NOW ON WHATSAPP</span>
             </a>
+          </div>
+
+          {/* Privacy Notice */}
+          <div className="flex items-center justify-center gap-1 text-[10px] text-stone-300 border-t border-stone-800/80 pt-1.5 pb-0.5">
+            <ShieldCheck className="w-3 h-3 text-stone-400 shrink-0" />
+            <span>Your conversation may be stored by KashmirYatra to help us respond to your enquiry.</span>
           </div>
         </div>
 

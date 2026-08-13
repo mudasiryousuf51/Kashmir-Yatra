@@ -1,0 +1,191 @@
+{
+  "entities": {
+    "Package": {
+      "title": "Package",
+      "description": "Kashmir tour package offering detailed itineraries, pricing, and inclusions.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique package identifier or slug"
+        },
+        "title": {
+          "type": "string",
+          "description": "Name of the tour package"
+        },
+        "tagline": {
+          "type": "string",
+          "description": "Short sub-headline or teaser"
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "holiday",
+            "offbeat",
+            "adventure"
+          ],
+          "description": "Category of the package"
+        },
+        "duration": {
+          "type": "string",
+          "description": "Duration text e.g. 3 Nights / 4 Days"
+        },
+        "nightsCount": {
+          "type": "number",
+          "description": "Number of nights"
+        },
+        "daysCount": {
+          "type": "number",
+          "description": "Number of days"
+        },
+        "startingPricePerPerson": {
+          "type": "number",
+          "description": "Starting indicative price in INR per person"
+        },
+        "destinationsCovered": {
+          "type": "array",
+          "description": "List of destinations visited"
+        },
+        "keyHighlights": {
+          "type": "array",
+          "description": "Key highlights of the tour"
+        },
+        "overview": {
+          "type": "string",
+          "description": "Package overview and narrative"
+        },
+        "itinerary": {
+          "type": "array",
+          "description": "Day-wise itinerary breakdowns"
+        },
+        "accommodationInfo": {
+          "type": "string",
+          "description": "Hotel and houseboat accommodation standard"
+        },
+        "transportationInfo": {
+          "type": "string",
+          "description": "Vehicle and cab details"
+        },
+        "inclusions": {
+          "type": "array",
+          "description": "Included services and meals"
+        },
+        "exclusions": {
+          "type": "array",
+          "description": "Excluded items and personal costs"
+        },
+        "bestTime": {
+          "type": "string",
+          "description": "Recommended seasons or months to visit"
+        },
+        "difficulty": {
+          "type": "string",
+          "description": "Trip difficulty level"
+        },
+        "importantNotes": {
+          "type": "array",
+          "description": "Advisories and permit notes"
+        },
+        "image": {
+          "type": "string",
+          "description": "Cover image URL"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Visibility flag on the public website"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update"
+        }
+      },
+      "required": [
+        "title",
+        "category",
+        "duration",
+        "startingPricePerPerson",
+        "active"
+      ]
+    },
+    "Conversation": {
+      "title": "Conversation",
+      "description": "Customer AI chat conversation record, detected package, booking intent, and enquiry status.",
+      "type": "object",
+      "properties": {
+        "conversationId": {
+          "type": "string",
+          "description": "Unique conversation identifier"
+        },
+        "anonymousSessionId": {
+          "type": "string",
+          "description": "Anonymous browser session identifier"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "ISO timestamp of conversation creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last message"
+        },
+        "messages": {
+          "type": "array",
+          "description": "List of chat messages exchanged between visitor and AI"
+        },
+        "detectedPackage": {
+          "type": "string",
+          "description": "Confident detected tour package of interest"
+        },
+        "detectedDestination": {
+          "type": "string",
+          "description": "Confident detected destination of interest"
+        },
+        "enquiryStatus": {
+          "type": "string",
+          "enum": [
+            "New",
+            "In Progress",
+            "Booking Requested",
+            "Contacted",
+            "Confirmed",
+            "Closed"
+          ],
+          "description": "Administrator workflow status"
+        },
+        "bookingIntent": {
+          "type": "boolean",
+          "description": "Flag indicating user showed intent to book"
+        },
+        "bookingRequested": {
+          "type": "boolean",
+          "description": "Flag indicating user explicitly asked to book"
+        },
+        "lastUserMessage": {
+          "type": "string",
+          "description": "Latest text message sent by the user"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Internal administrator notes"
+        }
+      },
+      "required": [
+        "conversationId",
+        "anonymousSessionId",
+        "createdAt",
+        "updatedAt",
+        "enquiryStatus"
+      ]
+    }
+  },
+  "firestore": {
+    "/packages/{packageId}": {
+      "entity": "Package",
+      "description": "Collection of tour packages manageable by authenticated admins."
+    },
+    "/conversations/{conversationId}": {
+      "entity": "Conversation",
+      "description": "Customer AI conversations and booking inquiries, readable only by authenticated administrators."
+    }
+  }
+}

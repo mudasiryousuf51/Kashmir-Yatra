@@ -305,16 +305,16 @@ function getFallbackKashmirResponse(query: string): string {
 💬 [Message us on WhatsApp](https://wa.me/917006248669)`;
   }
 
-  if (q.includes("book") || q.includes("payment") || q.includes("whatsapp") || q.includes("contact")) {
-    return `KashmirYatra does not operate automated online cart payments. All tour planning, customization, date confirmation, and booking are handled directly via WhatsApp!
+  if (q.includes("book") || q.includes("payment") || q.includes("reserve") || q.includes("confirm")) {
+    return `Khush Amdeed! Absolutely. I can help you with that. Your booking request will be handled by our KashmirYatra team on WhatsApp. Please continue with our team to confirm availability, pricing and booking details.
 
-To book your Kashmir tour:
-1. Contact us directly on WhatsApp at **+91 7006248669**
-2. Share your travel dates, group size, and preferred package
-3. Receive an official transparent quotation and itinerary voucher
-4. Finalize booking via verified bank transfer / UPI
+To finalize your Kashmir tour:
+1. Click the WhatsApp link below or message us directly at **+91 7006248669**
+2. Share your preferred travel dates, group size, and any custom requirements
+3. Our Srinagar team will check live availability, share an exact quotation, and issue an official voucher
+4. Finalize via verified bank transfer or UPI
 
-💬 [Chat with KashmirYatra on WhatsApp: +91 7006248669](https://wa.me/917006248669)`;
+💬 [Connect on WhatsApp (+91 7006248669) to Finalize Booking](https://wa.me/917006248669?text=Hello%20KashmirYatra%2C%20I%20am%20interested%20in%20booking%20a%20Kashmir%20tour%20package)`;
   }
 
   return `Khush Amdeed! 👋 I am **Kashmi**, your KashmirYatra travel consultant.
@@ -369,9 +369,12 @@ CRITICAL BEHAVIORAL AND ACCURACY DIRECTIVES:
 
 3. BOOKING DIRECTIVES:
 - Understand that KashmirYatra does NOT have online booking or online payments on the website.
-- If the customer asks to book, check availability, or customize, direct them to WhatsApp: +91 7006248669 (https://wa.me/917006248669).
-- If the customer asks about a specific package, provide the direct WhatsApp booking link with that package name included, for example:
-  [Book on WhatsApp: +91 7006248669](https://wa.me/917006248669?text=Hello%20KashmirYatra%2C%20I%20am%20interested%20in%20the%20[Package%20Name]%20package.)
+- If the customer shows intent to book, asks how to book, asks to reserve, or confirms their trip (e.g., "I want to book this", "Can I reserve this package?", "I want to confirm the trip", "How do I book?"):
+  * Respond warmly and state:
+    "Absolutely. I can help you with that. Your booking request will be handled by our KashmirYatra team on WhatsApp. Please continue with our team to confirm availability, pricing and booking details."
+  * Provide the direct WhatsApp booking link with the package name if discussed: https://wa.me/917006248669?text=Hello%20KashmirYatra%2C%20I%20am%20interested%20in%20[Package%20Name]
+  * Do NOT claim or suggest that the booking is already confirmed, locked, or paid for. The final confirmation is provided directly by the KashmirYatra team on WhatsApp after checking dates and issuing travel vouchers.
+- If the customer asks generally about contacting KashmirYatra, direct them to WhatsApp: +91 7006248669 (https://wa.me/917006248669).
 
 4. PERSONALIZED RECOMMENDATIONS & GENERAL QUESTIONS:
 - Act as an intelligent, helpful travel consultant. Understand user travel party, duration, and desires:

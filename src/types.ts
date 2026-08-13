@@ -30,6 +30,8 @@ export interface Package {
   difficulty?: 'Easy' | 'Moderate' | 'Challenging';
   importantNotes: string[];
   image: string;
+  active?: boolean;
+  updatedAt?: string;
 }
 
 export interface Destination {
@@ -71,4 +73,35 @@ export interface TravelerReview {
   packageTaken: string;
   date: string;
   avatar: string;
+}
+
+export type EnquiryStatus =
+  | 'New'
+  | 'In Progress'
+  | 'Booking Requested'
+  | 'Contacted'
+  | 'Confirmed'
+  | 'Closed';
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  text: string;
+  timestamp: string;
+}
+
+export interface Conversation {
+  id: string;
+  conversationId: string;
+  anonymousSessionId: string;
+  createdAt: string;
+  updatedAt: string;
+  messages: ChatMessage[];
+  detectedPackage: string | null;
+  detectedDestination: string | null;
+  enquiryStatus: EnquiryStatus;
+  bookingIntent: boolean;
+  bookingRequested: boolean;
+  lastUserMessage: string;
+  notes?: string;
 }
