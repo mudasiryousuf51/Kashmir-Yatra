@@ -1,0 +1,8 @@
+{
+  "name": "KashmirYatra",
+  "description": "Discover Kashmir, Your Way. Premium Kashmir holiday packages, offbeat tours, adventure trips, and direct WhatsApp travel assistance.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
