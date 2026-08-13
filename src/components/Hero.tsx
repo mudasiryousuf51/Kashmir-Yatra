@@ -76,7 +76,7 @@ export const Hero: React.FC<HeroProps> = ({ onExplorePackages, onOpenCustomBuild
                 className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-base shadow-xl hover:shadow-emerald-600/30 transition-all duration-200 transform hover:-translate-y-0.5"
               >
                 <MessageCircle className="w-5 h-5 fill-white text-emerald-600" />
-                <span>BOOK NOW</span>
+                <span>Book Now</span>
               </a>
             </div>
 

@@ -104,7 +104,7 @@ export const ContactSection: React.FC = () => {
                   <MapPin className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
                   <div>
                     <strong className="block text-white">Local Office Location:</strong>
-                    <span>Boulevard Road, Near Dal Lake Gate No. 1, Srinagar, Jammu & Kashmir 190001</span>
+                    <span>Awantipora, Jammu & Kashmir, India – 192122</span>
                   </div>
                 </div>
 

@@ -123,12 +123,12 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab, setPolicyTab }) =>
           {/* Contact Details */}
           <div className="lg:col-span-3 space-y-3">
             <h4 className="text-sm font-serif font-bold text-amber-300 uppercase tracking-wider">
-              Local Srinagar Office
+              Local Office
             </h4>
             <div className="space-y-2 text-xs text-stone-300">
               <p className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <span>Boulevard Road, Near Dal Lake Gate No. 1, Srinagar, J&K 190001</span>
+                <span>Awantipora, Jammu & Kashmir, India – 192122</span>
               </p>
               <p className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-amber-400 shrink-0" />
