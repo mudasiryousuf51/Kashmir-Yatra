@@ -39,15 +39,15 @@ export const AiAssistantModal: React.FC<AiAssistantModalProps> = ({
     {
       id: 'welcome-1',
       role: 'assistant',
-      text: `Khush Amdeed! 👋 I am **Kashmi**, your personal AI Kashmir Travel Assistant.
+      text: `Khush Amdeed! 👋 I am **Kashmi**, your KashmirYatra travel consultant.
 
-Where every valley tells a story! How can I help you plan your dream trip today?
+“Your Journey to Paradise Begins Here” — How may I help you plan your Kashmir trip today?
 
 You can ask me about:
-• **Custom Itineraries** (Couples, Families, Adventure, Budget)
-• **Live Weather & Packing Guide** (Srinagar, Gulmarg, Pahalgam, Gurez)
-• **Gondola Cable Car & Houseboat Stays**
-• **Local Foods, Pashmina Shopping & Border Permits**`,
+• **Packages & Pricing** (e.g. Kashmir Escape 3N/4D, Kashmir Explorer 4N/5D, Grand Tour 5N/6D)
+• **Offbeat & Adventure** (Gurez Valley, Doodhpathri, Skiing, Rafting & Trekking)
+• **Destinations & Sightseeing** (Srinagar, Gulmarg Gondola, Pahalgam Valleys, Sonamarg)
+• **Services & WhatsApp Booking** (+91 7006248669)`,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     },
   ]);
@@ -58,24 +58,24 @@ You can ask me about:
 
   const quickPrompts = [
     {
-      label: '5-Day Family Itinerary',
+      label: '4-Day Kashmir Escape',
       icon: Compass,
-      query: 'Can you suggest a best 5-day family itinerary for Kashmir including Srinagar, Gulmarg, and Pahalgam?',
+      query: 'What is included in the Kashmir Escape (3N/4D) package and what is the starting price?',
     },
     {
-      label: 'Gulmarg Weather & Packing',
-      icon: Sun,
-      query: 'What is the current weather and what clothing/thermals should I pack for Gulmarg & Pahalgam?',
-    },
-    {
-      label: 'Gurez Valley & Permits',
+      label: '5-Day Explorer (Pahalgam Stay)',
       icon: MapPin,
-      query: 'Tell me about Gurez Valley travel, Habba Khatoon peak, and permit requirements for visitors.',
+      query: 'Can you tell me about the Kashmir Explorer (4N/5D) package and its itinerary?',
     },
     {
-      label: 'Authentic Local Dishes',
-      icon: Utensils,
-      query: 'What are top authentic Kashmiri foods, Wazwan dishes, Kahwa, and best places to eat in Srinagar?',
+      label: 'Offbeat Gurez Valley Tour',
+      icon: Compass,
+      query: 'Tell me about the Offbeat Kashmir Explorer (4N/5D) to Gurez Valley and permit requirements.',
+    },
+    {
+      label: 'How to Book on WhatsApp',
+      icon: MessageCircle,
+      query: 'How do I book a tour package with KashmirYatra and what is your booking process?',
     },
   ];
 
@@ -190,7 +190,7 @@ You can ask me about:
                 </span>
               </div>
               <p className="text-xs text-stone-300">
-                KashmirYatra Local Travel Assistant • Where Every Valley Tells a Story
+                KashmirYatra Local Travel Assistant • Your Journey to Paradise Begins Here
               </p>
             </div>
           </div>
@@ -253,28 +253,75 @@ You can ask me about:
                       : 'bg-stone-800 text-stone-200 border border-stone-700 rounded-tl-none space-y-2'
                   }`}
                 >
-                  <div className="whitespace-pre-wrap">
+                  <div className="space-y-1.5">
                     {msg.text.split('\n').map((line, lIdx) => {
-                      // Basic bold formatting support
-                      if (line.includes('**')) {
-                        const parts = line.split('**');
-                        return (
-                          <p key={lIdx} className="my-1">
-                            {parts.map((p, pIdx) =>
-                              pIdx % 2 === 1 ? (
-                                <strong key={pIdx} className="text-amber-300 font-bold">
-                                  {p}
-                                </strong>
-                              ) : (
-                                p
-                              )
-                            )}
-                          </p>
-                        );
+                      if (!line.trim()) {
+                        return <div key={lIdx} className="h-1.5" />;
                       }
+
+                      // Helper to parse bold and links inside a line
+                      const parseLineContent = (text: string) => {
+                        // Regex for markdown links [text](url) or bold **text**
+                        const parts = [];
+                        let remaining = text;
+                        let keyCounter = 0;
+
+                        // Match markdown links [text](url)
+                        const linkRegex = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
+                        let match;
+                        let lastIdx = 0;
+
+                        while ((match = linkRegex.exec(text)) !== null) {
+                          if (match.index > lastIdx) {
+                            parts.push({ type: 'text', content: text.slice(lastIdx, match.index) });
+                          }
+                          parts.push({ type: 'link', text: match[1], url: match[2] });
+                          lastIdx = linkRegex.lastIndex;
+                        }
+                        if (lastIdx < text.length) {
+                          parts.push({ type: 'text', content: text.slice(lastIdx) });
+                        }
+
+                        return parts.map((part, pIdx) => {
+                          if (part.type === 'link') {
+                            return (
+                              <a
+                                key={pIdx}
+                                href={part.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-emerald-400 hover:text-emerald-300 underline font-bold inline-flex items-center gap-0.5 mx-0.5 transition-colors"
+                              >
+                                {part.text}
+                              </a>
+                            );
+                          }
+
+                          // Parse bold in text segment
+                          if (part.content && part.content.includes('**')) {
+                            const subParts = part.content.split('**');
+                            return (
+                              <span key={pIdx}>
+                                {subParts.map((sub, sIdx) =>
+                                  sIdx % 2 === 1 ? (
+                                    <strong key={sIdx} className="text-amber-300 font-bold">
+                                      {sub}
+                                    </strong>
+                                  ) : (
+                                    sub
+                                  )
+                                )}
+                              </span>
+                            );
+                          }
+
+                          return <span key={pIdx}>{part.content}</span>;
+                        });
+                      };
+
                       return (
-                        <p key={lIdx} className="my-0.5">
-                          {line}
+                        <p key={lIdx} className="leading-relaxed">
+                          {parseLineContent(line)}
                         </p>
                       );
                     })}
